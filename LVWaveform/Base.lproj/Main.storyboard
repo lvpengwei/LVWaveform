@@ -24,17 +24,47 @@
                                     <constraint firstAttribute="height" constant="100" id="QdJ-wI-UFG"/>
                                 </constraints>
                             </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dRK-pc-GYb" customClass="LVWaveformView" customModule="LVWaveform" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="100"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="100" id="rug-6t-iPo"/>
+                                </constraints>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gUk-vd-dGp">
+                                <rect key="frame" x="162.5" y="593" width="49" height="30"/>
+                                <state key="normal" title="Record"/>
+                                <connections>
+                                    <action selector="recordAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="AGQ-Un-MiL"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="9q9-5C-L29">
+                                <rect key="frame" x="171" y="543" width="32" height="30"/>
+                                <state key="normal" title="Stop"/>
+                                <connections>
+                                    <action selector="stopAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="UDM-gC-21A"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
+                            <constraint firstItem="9q9-5C-L29" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="57V-XX-2gS"/>
                             <constraint firstItem="WTi-Q2-qNB" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="77S-vT-3xy"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="WTi-Q2-qNB" secondAttribute="trailing" id="A1N-IY-n6j"/>
                             <constraint firstItem="WTi-Q2-qNB" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="CKO-3D-RyT"/>
+                            <constraint firstItem="dRK-pc-GYb" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="Pc3-w3-hWw"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="gUk-vd-dGp" secondAttribute="bottom" constant="44" id="Q32-ib-pUe"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="dRK-pc-GYb" secondAttribute="trailing" id="RhG-Px-Lv3"/>
+                            <constraint firstItem="gUk-vd-dGp" firstAttribute="top" secondItem="9q9-5C-L29" secondAttribute="bottom" constant="20" id="S0u-Hh-XVt"/>
                             <constraint firstItem="WTi-Q2-qNB" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="TaD-cb-r3v"/>
+                            <constraint firstItem="dRK-pc-GYb" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="c2d-xv-Lgi"/>
+                            <constraint firstItem="gUk-vd-dGp" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="r8J-bZ-wqe"/>
+                            <constraint firstItem="dRK-pc-GYb" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="ytL-sA-wtC"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
+                        <outlet property="recordWaveformView" destination="dRK-pc-GYb" id="5bV-Fe-RAC"/>
                         <outlet property="waveformView" destination="WTi-Q2-qNB" id="Cab-IB-l83"/>
                     </connections>
                 </viewController>

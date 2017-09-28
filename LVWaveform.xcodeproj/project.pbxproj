@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		565F3AEB2FF892DD0F1F562E /* Pods_LVWaveform.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 90B8C3D1E9E16BD3DF5CC8B0 /* Pods_LVWaveform.framework */; };
 		E63987F11F7CB0CD00DDC83F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E63987F01F7CB0CD00DDC83F /* AppDelegate.swift */; };
 		E63987F31F7CB0CD00DDC83F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E63987F21F7CB0CD00DDC83F /* ViewController.swift */; };
 		E63987F61F7CB0CD00DDC83F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E63987F41F7CB0CD00DDC83F /* Main.storyboard */; };
@@ -20,6 +21,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4C68A397AB5E7486473B9EFF /* Pods-LVWaveform.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LVWaveform.release.xcconfig"; path = "Pods/Target Support Files/Pods-LVWaveform/Pods-LVWaveform.release.xcconfig"; sourceTree = "<group>"; };
+		90B8C3D1E9E16BD3DF5CC8B0 /* Pods_LVWaveform.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_LVWaveform.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A1F648DDE014BA50401A0580 /* Pods-LVWaveform.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-LVWaveform.debug.xcconfig"; path = "Pods/Target Support Files/Pods-LVWaveform/Pods-LVWaveform.debug.xcconfig"; sourceTree = "<group>"; };
 		E63987ED1F7CB0CD00DDC83F /* LVWaveform.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LVWaveform.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E63987F01F7CB0CD00DDC83F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E63987F21F7CB0CD00DDC83F /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -39,17 +43,37 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				565F3AEB2FF892DD0F1F562E /* Pods_LVWaveform.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0859AD31C7D416422B7AF4D0 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				A1F648DDE014BA50401A0580 /* Pods-LVWaveform.debug.xcconfig */,
+				4C68A397AB5E7486473B9EFF /* Pods-LVWaveform.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		17458F6E97EB8F39984205D1 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				90B8C3D1E9E16BD3DF5CC8B0 /* Pods_LVWaveform.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		E63987E41F7CB0CC00DDC83F = {
 			isa = PBXGroup;
 			children = (
 				E63987EF1F7CB0CD00DDC83F /* LVWaveform */,
 				E63987EE1F7CB0CD00DDC83F /* Products */,
+				0859AD31C7D416422B7AF4D0 /* Pods */,
+				17458F6E97EB8F39984205D1 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -86,9 +110,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = E63987FF1F7CB0CD00DDC83F /* Build configuration list for PBXNativeTarget "LVWaveform" */;
 			buildPhases = (
+				412BBF65B650386EB1F86232 /* [CP] Check Pods Manifest.lock */,
 				E63987E91F7CB0CD00DDC83F /* Sources */,
 				E63987EA1F7CB0CD00DDC83F /* Frameworks */,
 				E63987EB1F7CB0CD00DDC83F /* Resources */,
+				3DB230E2D941B50102DB0CF2 /* [CP] Embed Pods Frameworks */,
+				6BC0D511496D289B4DC6EFAE /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -149,6 +176,54 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		3DB230E2D941B50102DB0CF2 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-LVWaveform/Pods-LVWaveform-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		412BBF65B650386EB1F86232 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		6BC0D511496D289B4DC6EFAE /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-LVWaveform/Pods-LVWaveform-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		E63987E91F7CB0CD00DDC83F /* Sources */ = {
@@ -292,13 +367,14 @@
 		};
 		E63988001F7CB0CD00DDC83F /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A1F648DDE014BA50401A0580 /* Pods-LVWaveform.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 3A75DREAB8;
 				INFOPLIST_FILE = LVWaveform/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.lvpengwei.LVWaveform;
+				PRODUCT_BUNDLE_IDENTIFIER = com.pengwei.LVWaveform;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -307,13 +383,14 @@
 		};
 		E63988011F7CB0CD00DDC83F /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4C68A397AB5E7486473B9EFF /* Pods-LVWaveform.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 3A75DREAB8;
 				INFOPLIST_FILE = LVWaveform/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.lvpengwei.LVWaveform;
+				PRODUCT_BUNDLE_IDENTIFIER = com.pengwei.LVWaveform;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

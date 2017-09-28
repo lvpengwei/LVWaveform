@@ -20,7 +20,7 @@ class LVWaveformView: UIView {
     weak var delegate: LVWaveformViewDelegate?
     var recommendWidth: CGFloat = 0
     var widthPerSec: CGFloat = 60 // 每一秒的宽度
-    var samplePerSec: Int = 80
+    var samplePerSec: Int = 80 // (60 / 0.75)
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -32,30 +32,20 @@ class LVWaveformView: UIView {
         commonInit()
     }
     
-    fileprivate weak var collectionView: UICollectionView!
+    fileprivate weak var scrollView: WaveformScrollView!
     fileprivate func commonInit() {
-        let layout = UICollectionViewFlowLayout()
-        layout.scrollDirection = .horizontal
-        layout.itemSize = CGSize(width: 1, height: 100)
-        layout.minimumLineSpacing = 0
-        layout.minimumInteritemSpacing = 0
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.delegate = self
-        collectionView.dataSource = self
-        collectionView.showsVerticalScrollIndicator = false
-        collectionView.showsHorizontalScrollIndicator = false
-        collectionView.backgroundColor = UIColor.clear
-        collectionView.register(WaveformCollectionViewCell.classForCoder(), forCellWithReuseIdentifier: "WaveformCollectionViewCellIdentifier")
-        addSubview(collectionView)
-        self.collectionView = collectionView
+        let scrollView = WaveformScrollView()
+        scrollView.showsVerticalScrollIndicator = false
+        scrollView.showsHorizontalScrollIndicator = false
+        addSubview(scrollView)
+        self.scrollView = scrollView
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        collectionView.frame = bounds
+        scrollView.frame = bounds
     }
     
-    fileprivate var samples: [WaveformModel] = []
     fileprivate var asset: AVAsset? = nil
     func showAsset(_ asset: AVAsset) {
         self.asset = asset
@@ -117,6 +107,7 @@ class LVWaveformView: UIView {
             }
             // Append audio sample buffer into our current sample buffer
             operation.appendSampleBuffer(readSampleBuffer)
+            CMSampleBufferInvalidate(readSampleBuffer)
         }
         
         // Process the remaining samples at the end which didn't fit into samplesPerPixel
@@ -132,24 +123,16 @@ class LVWaveformView: UIView {
     }
     
     func reloadData(_ operation: SampleBufferProcessOperation, width: CGFloat) {
-        samples.removeAll()
-        var index = 0
-        var model = WaveformModel()
-        for sample in operation.outputSamples {
-            if index == samplePerSec {
-                model.width = widthPerSec
-                samples.append(model)
-                model = WaveformModel()
-                index = 0
-            }
-            model.data.append(sample / operation.sampleMax)
-            index += 1
+//        scrollView.samples = operation.outputSamples
+        scrollView.sampleMax = operation.sampleMax
+        scrollView.contentSize = CGSize(width: width, height: bounds.height)
+        scrollView.drawSamples(operation.outputSamples)
+    }
+    
+    func scrollToEnd() {
+        DispatchQueue.main.async {
+            self.scrollView.contentOffset = CGPoint(x: max(0, self.scrollView.contentSize.width - self.scrollView.bounds.width), y: 0)
         }
-        if index != samplePerSec {
-            model.width = width - CGFloat(samples.count) * widthPerSec
-            samples.append(model)
-        }
-        collectionView.reloadData()
     }
     
     fileprivate func loadAsset(_ asset: AVAsset, _ completion: @escaping ((Bool)->Void)) {
@@ -178,20 +161,6 @@ class LVWaveformView: UIView {
     
 }
 
-extension LVWaveformView: UICollectionViewDelegateFlowLayout, UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return samples.count
-    }
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: samples[indexPath.item].width, height: 100)
-    }
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "WaveformCollectionViewCellIdentifier", for: indexPath) as! WaveformCollectionViewCell
-        cell.setModel(samples[indexPath.item])
-        return cell
-    }
-}
-
 class SampleBufferProcessOperation {
     var sampleMax: CGFloat = 0
     let samplesPerPixel: Int
@@ -211,7 +180,6 @@ class SampleBufferProcessOperation {
         var readBufferPointer: UnsafeMutablePointer<Int8>?
         CMBlockBufferGetDataPointer(readBuffer, 0, &readBufferLength, nil, &readBufferPointer)
         sampleBuffer.append(UnsafeBufferPointer(start: readBufferPointer, count: readBufferLength))
-        CMSampleBufferInvalidate(readSampleBuffer)
         
         let totalSamples = sampleBuffer.count / MemoryLayout<Int16>.size
         let downSampledLength = totalSamples / samplesPerPixel
@@ -280,12 +248,12 @@ class SampleBufferProcessOperation {
     
 }
 
-private class WaveformModel {
-    var width: CGFloat = 0
-    var data: [CGFloat] = []
-}
-
-private class WaveformCollectionViewCell: UICollectionViewCell {
+private class WaveformScrollView: UIScrollView {
+    
+    override class var layerClass: Swift.AnyClass {
+        return CAShapeLayer.classForCoder()
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         commonInit()
@@ -296,34 +264,49 @@ private class WaveformCollectionViewCell: UICollectionViewCell {
         commonInit()
     }
     
-    fileprivate var lineLayers: [CALayer] = []
     fileprivate func commonInit() {
+        addObserver(self, forKeyPath: "contentOffset", options: .new, context: nil)
+        let lay = layer as! CAShapeLayer
+        lay.strokeColor = UIColor.black.cgColor
+        lay.fillColor = UIColor.white.cgColor
     }
     
-    fileprivate var model: WaveformModel?
-    func setModel(_ model: WaveformModel) {
-        if model !== self.model {
-            self.model = model
-            for lineLayer in lineLayers {
-                lineLayer.removeFromSuperlayer()
-            }
-            lineLayers.removeAll()
-            var centerX: CGFloat = 0.5 * 0.5
-            var index = 0
-            for h in model.data {
-                let layer = CALayer()
-                layer.backgroundColor = UIColor.black.cgColor
-                layer.bounds = CGRect(x: 0, y: 0, width: 0.5, height: h * 100)
-                layer.position = CGPoint(x: centerX, y: 50)
-                contentView.layer.addSublayer(layer)
-                lineLayers.append(layer)
-                centerX += 0.5
-                if index % 4 == 3 {
-                    centerX += 1
-                }
-                index += 1
-            }
+    deinit {
+        removeObserver(self, forKeyPath: "contentOffset")
+    }
+    
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if keyPath == "contentOffset" {
+            drawSamplesIfNeed()
         }
+    }
+    
+    fileprivate func drawSamplesIfNeed() {
+        if samples.count == 0 {
+            return
+        }
+        let leftIndex = Int(max(0, (contentOffset.x - 50) / 3 * 4))
+        let rightIndex = min(samples.count - 1, Int((contentOffset.x + bounds.width + 50) / 3 * 4))
+        let path = UIBezierPath()
+        path.lineWidth = 0.5
+        for i in leftIndex...rightIndex {
+            let h = samples[i] / sampleMax
+            let centerX = 0.5 * 0.5 + CGFloat(i) * 0.5 + CGFloat(i / 4)
+            let x = centerX - 0.25
+            let y = (1 - h) * 100 * 0.5
+            path.move(to: CGPoint(x: x, y: y))
+            path.addLine(to: CGPoint(x: x, y: y + h * 100))
+        }
+        let lay = layer as! CAShapeLayer
+        lay.path = path.cgPath
+    }
+    
+    fileprivate var samples: [CGFloat] = []
+    fileprivate var sampleMax: CGFloat = 100
+    fileprivate var index = 0
+    func drawSamples(_ samples: [CGFloat]) {
+        self.samples = samples
+        drawSamplesIfNeed()
     }
     
 }

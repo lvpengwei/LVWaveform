@@ -1,0 +1,22 @@
+PODS:
+  - SCRecorder (2.7.0)
+
+DEPENDENCIES:
+  - SCRecorder (from `https://github.com/lvpengwei/SCRecorder.git`, commit `121be9ffd585834a0111d3b36253052d1b1f2be9`)
+
+EXTERNAL SOURCES:
+  SCRecorder:
+    :commit: 121be9ffd585834a0111d3b36253052d1b1f2be9
+    :git: https://github.com/lvpengwei/SCRecorder.git
+
+CHECKOUT OPTIONS:
+  SCRecorder:
+    :commit: 121be9ffd585834a0111d3b36253052d1b1f2be9
+    :git: https://github.com/lvpengwei/SCRecorder.git
+
+SPEC CHECKSUMS:
+  SCRecorder: bbb521dbc222908876ec9cd9156bbc8a893bed44
+
+PODFILE CHECKSUM: 7638330e878a3e75d91538f4020ef9ec1abc7066
+
+COCOAPODS: 1.2.1
