@@ -12,13 +12,11 @@ import Accelerate
 
 protocol LVWaveformViewDelegate: class {
     func waveformViewAssetLoadError()
-    func waveformViewFrameDidCalc()
 }
 
 class LVWaveformView: UIView {
     
     weak var delegate: LVWaveformViewDelegate?
-    var recommendWidth: CGFloat = 0
     var widthPerSec: CGFloat = 60 // 每一秒的宽度
     var samplePerSec: Int = 80 // (60 / 0.75)
     
@@ -70,11 +68,6 @@ class LVWaveformView: UIView {
             let asbd = CMAudioFormatDescriptionGetStreamBasicDescription(audioFormatDesc)
             else { return }
         
-        recommendWidth = floor(CGFloat(asset.duration.seconds) * widthPerSec)
-        DispatchQueue.main.async {
-            self.delegate?.waveformViewFrameDidCalc()
-        }
-        
         guard let reader = try? AVAssetReader(asset: asset) else { return }
         let outputSettingsDict: [String : Any] = [
             AVFormatIDKey: Int(kAudioFormatLinearPCM),
@@ -115,17 +108,16 @@ class LVWaveformView: UIView {
         
         if reader.status == .completed {
             DispatchQueue.main.async {
-                self.reloadData(operation, width: self.recommendWidth)
+                self.reloadData(operation, duration: CGFloat(asset.duration.seconds))
             }
         } else {
             print("LVWaveformView failed to read audio: \(String(describing: reader.error))")
         }
     }
     
-    func reloadData(_ operation: SampleBufferProcessOperation, width: CGFloat) {
-//        scrollView.samples = operation.outputSamples
+    func reloadData(_ operation: SampleBufferProcessOperation, duration: CGFloat) {
         scrollView.sampleMax = operation.sampleMax
-        scrollView.contentSize = CGSize(width: width, height: bounds.height)
+        scrollView.contentSize = CGSize(width: duration * widthPerSec, height: bounds.height)
         scrollView.drawSamples(operation.outputSamples)
     }
     

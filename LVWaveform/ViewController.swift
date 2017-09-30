@@ -76,16 +76,13 @@ extension ViewController: SCRecorderDelegate {
         operation?.appendSampleBuffer(sampleBuffer)
         operation?.sampleMax = 5000
         if let time = recorder.session?.duration, let operation = operation {
-            recordWaveformView.reloadData(operation, width: floor(CGFloat(time.seconds * Double(60))))
+            recordWaveformView.reloadData(operation, duration: CGFloat(time.seconds))
             recordWaveformView.scrollToEnd()
         }
     }
 }
 
 extension ViewController: LVWaveformViewDelegate {
-    func waveformViewFrameDidCalc() {
-        print(waveformView.recommendWidth)
-    }
     func waveformViewAssetLoadError() {
         
     }
